@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 use protobuf::Message;
 #[cfg(feature = "test")]
 pub use test::*;

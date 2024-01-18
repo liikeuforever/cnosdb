@@ -1,3 +1,4 @@
+#![allow(deprecated)]
 mod case;
 mod cluster_def;
 mod independent;

@@ -290,20 +290,48 @@ mod test {
     type TupleList = Vec<(ScalarValue, ScalarValue)>;
 
     fn records_with_result() -> (TupleList, TupleList) {
-        #[rustfmt::skip]
-        (vec![
-            (ScalarValue::TimestampNanosecond(Some(0), None), ScalarValue::Utf8(Some("111".into()))),
-            (ScalarValue::TimestampNanosecond(Some(3), None), ScalarValue::Utf8(Some("222".into()))),
-            (ScalarValue::TimestampNanosecond(Some(10), None), ScalarValue::Utf8(Some("222".into()))),
-            (ScalarValue::TimestampNanosecond(Some(100), None), ScalarValue::Utf8(Some("333".into()))),
-            (ScalarValue::TimestampNanosecond(Some(900), None), ScalarValue::Utf8(Some("111".into()))),
-            (ScalarValue::TimestampNanosecond(Some(1900), None), ScalarValue::Utf8(Some("222".into()))),
-        ],
-        vec![
-            (ScalarValue::Utf8(Some("111".into())), ScalarValue::IntervalMonthDayNano(Some(1003))),
-            (ScalarValue::Utf8(Some("222".into())), ScalarValue::IntervalMonthDayNano(Some(97))),
-            (ScalarValue::Utf8(Some("333".into())), ScalarValue::IntervalMonthDayNano(Some(800))),
-        ])
+        (
+            vec![
+                (
+                    ScalarValue::TimestampNanosecond(Some(0), None),
+                    ScalarValue::Utf8(Some("111".into())),
+                ),
+                (
+                    ScalarValue::TimestampNanosecond(Some(3), None),
+                    ScalarValue::Utf8(Some("222".into())),
+                ),
+                (
+                    ScalarValue::TimestampNanosecond(Some(10), None),
+                    ScalarValue::Utf8(Some("222".into())),
+                ),
+                (
+                    ScalarValue::TimestampNanosecond(Some(100), None),
+                    ScalarValue::Utf8(Some("333".into())),
+                ),
+                (
+                    ScalarValue::TimestampNanosecond(Some(900), None),
+                    ScalarValue::Utf8(Some("111".into())),
+                ),
+                (
+                    ScalarValue::TimestampNanosecond(Some(1900), None),
+                    ScalarValue::Utf8(Some("222".into())),
+                ),
+            ],
+            vec![
+                (
+                    ScalarValue::Utf8(Some("111".into())),
+                    ScalarValue::IntervalMonthDayNano(Some(1003)),
+                ),
+                (
+                    ScalarValue::Utf8(Some("222".into())),
+                    ScalarValue::IntervalMonthDayNano(Some(97)),
+                ),
+                (
+                    ScalarValue::Utf8(Some("333".into())),
+                    ScalarValue::IntervalMonthDayNano(Some(800)),
+                ),
+            ],
+        )
     }
 
     #[test]

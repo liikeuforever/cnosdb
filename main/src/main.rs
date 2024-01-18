@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-
+#![allow(deprecated)]
 use std::fmt::Display;
 use std::path::Path;
 use std::str::FromStr;
@@ -148,9 +148,9 @@ enum CheckCommand {
     // MetaConfig {},
 }
 
-#[cfg(unix)]
-#[global_allocator]
-static A: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
+// #[cfg(unix)]
+// #[global_allocator]
+// static A: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 /// To run cnosdb-cli:
 ///
@@ -262,6 +262,7 @@ fn init_runtime(cores: Option<usize>) -> Result<Runtime, std::io::Error> {
         },
     }
 }
+
 /// Merge the deployment configs(mode) between CLI arguments and config file,
 /// values in the CLI arguments (if any) has higher priority.
 fn get_final_deployment_mode(

@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use std::cmp;
 use std::collections::HashMap;
 use std::fmt::{Display, Write};
@@ -565,7 +567,7 @@ mod test {
             parse_nanos("2023-01-01 00:06:00"),
         ];
         #[rustfmt::skip]
-        let data_blocks = vec![
+            let data_blocks = vec![
             DataBlock::U64 { ts: timestamps.clone(), val: vec![1, 2, 3, 4, 5, 6], enc: DataBlockEncoding::default() },
             DataBlock::I64 { ts: timestamps.clone(), val: vec![1, 2, 3, 4, 5, 6], enc: DataBlockEncoding::default() },
             DataBlock::Str {
@@ -986,7 +988,7 @@ mod test {
             parse_nanos("2023-02-01 00:03:00"),
         ];
         #[rustfmt::skip]
-        let data_blocks = vec![
+            let data_blocks = vec![
             DataBlock::U64 { ts: timestamps.clone(), val: vec![1, 2, 3, 4, 5, 6], enc: DataBlockEncoding::default() },
             DataBlock::I64 { ts: timestamps.clone(), val: vec![1, 2, 3, 4, 5, 6], enc: DataBlockEncoding::default() },
             DataBlock::F64 { ts: timestamps.clone(), val: vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0], enc: DataBlockEncoding::default() },
@@ -1007,7 +1009,7 @@ mod test {
             data_block_to_hash_tree(&data_blocks[4], DEFAULT_DURATION),
         ];
         #[rustfmt::skip]
-        let columns = vec![
+            let columns = vec![
             TableColumn::new(0, U64_COL_NAME.to_string(), ColumnType::Field(ValueType::Unsigned), Default::default()),
             TableColumn::new(1, I64_COL_NAME.to_string(), ColumnType::Field(ValueType::Integer), Default::default()),
             TableColumn::new(2, F64_COL_NAME.to_string(), ColumnType::Field(ValueType::Float), Default::default()),
