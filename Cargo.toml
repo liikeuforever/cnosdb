@@ -77,7 +77,7 @@ fly-accept-encoding = "0.2.0"
 integer-encoding = "4.0.0"
 lazy_static = "1.4"
 libc = { version = "0.2", default-features = false }
-lru = "0.12.1"
+lru = "0.12.3"
 md-5 = "0.10"
 minivec = "0.4.0"
 mio = "0.8"
