@@ -1,0 +1,29 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+---
+version: 2
+updates:
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      # Certain crates can be ignored, with the following section referencing InfluxDB
+    ignore:
+      # Thrift version needs to match the version of the thrift-compiler used to generate code,
+      # and therefore this dependency requires a more manual upgrade
+      #
+      # Additionally the thrift-compiler version available in standard repos tends to lag
+      # the latest release significantly, and so updating to the latest version adds friction
+      - dependency-name: "thrift"
+
+      # We want to update arrow and datafusion manually
+      - dependency-name: "arrow"
+      - dependency-name: "arrow-*"
+      - dependency-name: "parquet"
+      - dependency-name: "datafusion"
+      - dependency-name: "datafusion-*"
