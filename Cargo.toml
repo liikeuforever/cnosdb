@@ -67,7 +67,7 @@ datafusion-proto = { git = "https://github.com/cnosdb/arrow-datafusion.git", bra
 datafusion = { git = "https://github.com/cnosdb/arrow-datafusion.git", branch = "27.0.0" }
 diff = "0.1.13"
 dirs = "5.0.1"
-env_logger = "0.10.0"
+env_logger = "0.10.2"
 fast-float = "0.2.0"
 flatbuffers = "22.9"
 flate2 = "1.0.24"
