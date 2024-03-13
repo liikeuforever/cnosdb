@@ -272,8 +272,8 @@ pub mod raft_write_command {
 /// Generated client implementations.
 pub mod tskv_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     /// --------------------------------------------------------------------
     #[derive(Debug, Clone)]
     pub struct TskvServiceClient<T> {
@@ -318,9 +318,8 @@ pub mod tskv_service_client {
                     <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
                 >,
             >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + Send + Sync,
         {
             TskvServiceClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -359,19 +358,14 @@ pub mod tskv_service_client {
             &mut self,
             request: impl tonic::IntoRequest<super::PingRequest>,
         ) -> std::result::Result<tonic::Response<super::PingResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/Ping",
-            );
+            let path = http::uri::PathAndQuery::from_static("/kv_service.TSKVService/Ping");
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("kv_service.TSKVService", "Ping"));
@@ -384,139 +378,123 @@ pub mod tskv_service_client {
             tonic::Response<tonic::codec::Streaming<super::BatchBytesResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/QueryRecordBatch",
-            );
+            let path =
+                http::uri::PathAndQuery::from_static("/kv_service.TSKVService/QueryRecordBatch");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("kv_service.TSKVService", "QueryRecordBatch"));
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "QueryRecordBatch",
+            ));
             self.inner.server_streaming(req, path, codec).await
         }
         pub async fn exec_raft_write_command(
             &mut self,
             request: impl tonic::IntoRequest<super::RaftWriteCommand>,
         ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/kv_service.TSKVService/ExecRaftWriteCommand",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("kv_service.TSKVService", "ExecRaftWriteCommand"),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "ExecRaftWriteCommand",
+            ));
             self.inner.unary(req, path, codec).await
         }
         pub async fn exec_admin_command(
             &mut self,
             request: impl tonic::IntoRequest<super::AdminCommandRequest>,
         ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/ExecAdminCommand",
-            );
+            let path =
+                http::uri::PathAndQuery::from_static("/kv_service.TSKVService/ExecAdminCommand");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("kv_service.TSKVService", "ExecAdminCommand"));
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "ExecAdminCommand",
+            ));
             self.inner.unary(req, path, codec).await
         }
         pub async fn exec_admin_fetch_command(
             &mut self,
             request: impl tonic::IntoRequest<super::AdminFetchCommandRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::BatchBytesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::BatchBytesResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
                 "/kv_service.TSKVService/ExecAdminFetchCommand",
             );
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("kv_service.TSKVService", "ExecAdminFetchCommand"),
-                );
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "ExecAdminFetchCommand",
+            ));
             self.inner.unary(req, path, codec).await
         }
         pub async fn exec_open_raft_node(
             &mut self,
             request: impl tonic::IntoRequest<super::OpenRaftNodeRequest>,
         ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/ExecOpenRaftNode",
-            );
+            let path =
+                http::uri::PathAndQuery::from_static("/kv_service.TSKVService/ExecOpenRaftNode");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("kv_service.TSKVService", "ExecOpenRaftNode"));
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "ExecOpenRaftNode",
+            ));
             self.inner.unary(req, path, codec).await
         }
         pub async fn exec_drop_raft_node(
             &mut self,
             request: impl tonic::IntoRequest<super::DropRaftNodeRequest>,
         ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/ExecDropRaftNode",
-            );
+            let path =
+                http::uri::PathAndQuery::from_static("/kv_service.TSKVService/ExecDropRaftNode");
             let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("kv_service.TSKVService", "ExecDropRaftNode"));
+            req.extensions_mut().insert(GrpcMethod::new(
+                "kv_service.TSKVService",
+                "ExecDropRaftNode",
+            ));
             self.inner.unary(req, path, codec).await
         }
         pub async fn download_file(
@@ -526,19 +504,14 @@ pub mod tskv_service_client {
             tonic::Response<tonic::codec::Streaming<super::BatchBytesResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/DownloadFile",
-            );
+            let path = http::uri::PathAndQuery::from_static("/kv_service.TSKVService/DownloadFile");
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("kv_service.TSKVService", "DownloadFile"));
@@ -551,19 +524,14 @@ pub mod tskv_service_client {
             tonic::Response<tonic::codec::Streaming<super::BatchBytesResponse>>,
             tonic::Status,
         > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/kv_service.TSKVService/TagScan",
-            );
+            let path = http::uri::PathAndQuery::from_static("/kv_service.TSKVService/TagScan");
             let mut req = request.into_request();
             req.extensions_mut()
                 .insert(GrpcMethod::new("kv_service.TSKVService", "TagScan"));
@@ -585,16 +553,12 @@ pub mod tskv_service_server {
         /// Server streaming response type for the QueryRecordBatch method.
         type QueryRecordBatchStream: futures_core::Stream<
                 Item = std::result::Result<super::BatchBytesResponse, tonic::Status>,
-            >
-            + Send
+            > + Send
             + 'static;
         async fn query_record_batch(
             &self,
             request: tonic::Request<super::QueryRecordBatchRequest>,
-        ) -> std::result::Result<
-            tonic::Response<Self::QueryRecordBatchStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::QueryRecordBatchStream>, tonic::Status>;
         async fn exec_raft_write_command(
             &self,
             request: tonic::Request<super::RaftWriteCommand>,
@@ -606,10 +570,7 @@ pub mod tskv_service_server {
         async fn exec_admin_fetch_command(
             &self,
             request: tonic::Request<super::AdminFetchCommandRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::BatchBytesResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::BatchBytesResponse>, tonic::Status>;
         async fn exec_open_raft_node(
             &self,
             request: tonic::Request<super::OpenRaftNodeRequest>,
@@ -621,21 +582,16 @@ pub mod tskv_service_server {
         /// Server streaming response type for the DownloadFile method.
         type DownloadFileStream: futures_core::Stream<
                 Item = std::result::Result<super::BatchBytesResponse, tonic::Status>,
-            >
-            + Send
+            > + Send
             + 'static;
         async fn download_file(
             &self,
             request: tonic::Request<super::DownloadFileRequest>,
-        ) -> std::result::Result<
-            tonic::Response<Self::DownloadFileStream>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<Self::DownloadFileStream>, tonic::Status>;
         /// Server streaming response type for the TagScan method.
         type TagScanStream: futures_core::Stream<
                 Item = std::result::Result<super::BatchBytesResponse, tonic::Status>,
-            >
-            + Send
+            > + Send
             + 'static;
         async fn tag_scan(
             &self,
@@ -666,10 +622,7 @@ pub mod tskv_service_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -725,13 +678,9 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/Ping" => {
                     #[allow(non_camel_case_types)]
                     struct PingSvc<T: TskvService>(pub Arc<T>);
-                    impl<T: TskvService> tonic::server::UnaryService<super::PingRequest>
-                    for PingSvc<T> {
+                    impl<T: TskvService> tonic::server::UnaryService<super::PingRequest> for PingSvc<T> {
                         type Response = super::PingResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PingRequest>,
@@ -767,25 +716,20 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/QueryRecordBatch" => {
                     #[allow(non_camel_case_types)]
                     struct QueryRecordBatchSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::ServerStreamingService<
-                        super::QueryRecordBatchRequest,
-                    > for QueryRecordBatchSvc<T> {
+                    impl<T: TskvService>
+                        tonic::server::ServerStreamingService<super::QueryRecordBatchRequest>
+                        for QueryRecordBatchSvc<T>
+                    {
                         type Response = super::BatchBytesResponse;
                         type ResponseStream = T::QueryRecordBatchStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::QueryRecordBatchRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).query_record_batch(request).await
-                            };
+                            let fut = async move { (*inner).query_record_batch(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -815,23 +759,18 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/ExecRaftWriteCommand" => {
                     #[allow(non_camel_case_types)]
                     struct ExecRaftWriteCommandSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::UnaryService<super::RaftWriteCommand>
-                    for ExecRaftWriteCommandSvc<T> {
+                    impl<T: TskvService> tonic::server::UnaryService<super::RaftWriteCommand>
+                        for ExecRaftWriteCommandSvc<T>
+                    {
                         type Response = super::StatusResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::RaftWriteCommand>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).exec_raft_write_command(request).await
-                            };
+                            let fut =
+                                async move { (*inner).exec_raft_write_command(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -861,23 +800,17 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/ExecAdminCommand" => {
                     #[allow(non_camel_case_types)]
                     struct ExecAdminCommandSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::UnaryService<super::AdminCommandRequest>
-                    for ExecAdminCommandSvc<T> {
+                    impl<T: TskvService> tonic::server::UnaryService<super::AdminCommandRequest>
+                        for ExecAdminCommandSvc<T>
+                    {
                         type Response = super::StatusResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AdminCommandRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).exec_admin_command(request).await
-                            };
+                            let fut = async move { (*inner).exec_admin_command(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -907,23 +840,19 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/ExecAdminFetchCommand" => {
                     #[allow(non_camel_case_types)]
                     struct ExecAdminFetchCommandSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::UnaryService<super::AdminFetchCommandRequest>
-                    for ExecAdminFetchCommandSvc<T> {
+                    impl<T: TskvService>
+                        tonic::server::UnaryService<super::AdminFetchCommandRequest>
+                        for ExecAdminFetchCommandSvc<T>
+                    {
                         type Response = super::BatchBytesResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::AdminFetchCommandRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).exec_admin_fetch_command(request).await
-                            };
+                            let fut =
+                                async move { (*inner).exec_admin_fetch_command(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -953,23 +882,17 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/ExecOpenRaftNode" => {
                     #[allow(non_camel_case_types)]
                     struct ExecOpenRaftNodeSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::UnaryService<super::OpenRaftNodeRequest>
-                    for ExecOpenRaftNodeSvc<T> {
+                    impl<T: TskvService> tonic::server::UnaryService<super::OpenRaftNodeRequest>
+                        for ExecOpenRaftNodeSvc<T>
+                    {
                         type Response = super::StatusResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::OpenRaftNodeRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).exec_open_raft_node(request).await
-                            };
+                            let fut = async move { (*inner).exec_open_raft_node(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -999,23 +922,17 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/ExecDropRaftNode" => {
                     #[allow(non_camel_case_types)]
                     struct ExecDropRaftNodeSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::UnaryService<super::DropRaftNodeRequest>
-                    for ExecDropRaftNodeSvc<T> {
+                    impl<T: TskvService> tonic::server::UnaryService<super::DropRaftNodeRequest>
+                        for ExecDropRaftNodeSvc<T>
+                    {
                         type Response = super::StatusResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::DropRaftNodeRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).exec_drop_raft_node(request).await
-                            };
+                            let fut = async move { (*inner).exec_drop_raft_node(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -1045,24 +962,20 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/DownloadFile" => {
                     #[allow(non_camel_case_types)]
                     struct DownloadFileSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::ServerStreamingService<super::DownloadFileRequest>
-                    for DownloadFileSvc<T> {
+                    impl<T: TskvService>
+                        tonic::server::ServerStreamingService<super::DownloadFileRequest>
+                        for DownloadFileSvc<T>
+                    {
                         type Response = super::BatchBytesResponse;
                         type ResponseStream = T::DownloadFileStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::DownloadFileRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).download_file(request).await
-                            };
+                            let fut = async move { (*inner).download_file(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -1092,17 +1005,14 @@ pub mod tskv_service_server {
                 "/kv_service.TSKVService/TagScan" => {
                     #[allow(non_camel_case_types)]
                     struct TagScanSvc<T: TskvService>(pub Arc<T>);
-                    impl<
-                        T: TskvService,
-                    > tonic::server::ServerStreamingService<
-                        super::QueryRecordBatchRequest,
-                    > for TagScanSvc<T> {
+                    impl<T: TskvService>
+                        tonic::server::ServerStreamingService<super::QueryRecordBatchRequest>
+                        for TagScanSvc<T>
+                    {
                         type Response = super::BatchBytesResponse;
                         type ResponseStream = T::TagScanStream;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::ResponseStream>,
-                            tonic::Status,
-                        >;
+                        type Future =
+                            BoxFuture<tonic::Response<Self::ResponseStream>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::QueryRecordBatchRequest>,
@@ -1135,18 +1045,14 @@ pub mod tskv_service_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        Ok(
-                            http::Response::builder()
-                                .status(200)
-                                .header("grpc-status", "12")
-                                .header("content-type", "application/grpc")
-                                .body(empty_body())
-                                .unwrap(),
-                        )
-                    })
-                }
+                _ => Box::pin(async move {
+                    Ok(http::Response::builder()
+                        .status(200)
+                        .header("grpc-status", "12")
+                        .header("content-type", "application/grpc")
+                        .body(empty_body())
+                        .unwrap())
+                }),
             }
         }
     }

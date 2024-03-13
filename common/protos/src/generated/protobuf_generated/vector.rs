@@ -137,10 +137,8 @@ pub struct Metric {
     #[prost(message, optional, tag = "2")]
     pub timestamp: ::core::option::Option<Timestamp>,
     #[prost(map = "string, string", tag = "3")]
-    pub tags_v1: ::std::collections::HashMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
+    pub tags_v1:
+        ::std::collections::HashMap<::prost::alloc::string::String, ::prost::alloc::string::String>,
     #[prost(map = "string, message", tag = "20")]
     pub tags_v2: ::std::collections::HashMap<::prost::alloc::string::String, TagValues>,
     #[prost(enumeration = "metric::Kind", tag = "4")]
@@ -151,22 +149,15 @@ pub struct Metric {
     pub interval_ms: u32,
     #[prost(message, optional, tag = "19")]
     pub metadata: ::core::option::Option<Value>,
-    #[prost(oneof = "metric::Value", tags = "5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17")]
+    #[prost(
+        oneof = "metric::Value",
+        tags = "5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17"
+    )]
     pub value: ::core::option::Option<metric::Value>,
 }
 /// Nested message and enum types in `Metric`.
 pub mod metric {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Kind {
         Incremental = 0,
@@ -498,8 +489,8 @@ impl ServingStatus {
 /// Generated client implementations.
 pub mod vector_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
     use tonic::codegen::http::Uri;
+    use tonic::codegen::*;
     #[derive(Debug, Clone)]
     pub struct VectorClient<T> {
         inner: tonic::client::Grpc<T>,
@@ -543,9 +534,8 @@ pub mod vector_client {
                     <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
                 >,
             >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
+            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
+                Into<StdError> + Send + Sync,
         {
             VectorClient::new(InterceptedService::new(inner, interceptor))
         }
@@ -583,47 +573,37 @@ pub mod vector_client {
         pub async fn push_events(
             &mut self,
             request: impl tonic::IntoRequest<super::PushEventsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PushEventsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::PushEventsResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static("/vector.Vector/PushEvents");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("vector.Vector", "PushEvents"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("vector.Vector", "PushEvents"));
             self.inner.unary(req, path, codec).await
         }
         pub async fn health_check(
             &mut self,
             request: impl tonic::IntoRequest<super::HealthCheckRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::HealthCheckResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
+        ) -> std::result::Result<tonic::Response<super::HealthCheckResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
             let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/vector.Vector/HealthCheck",
-            );
+            let path = http::uri::PathAndQuery::from_static("/vector.Vector/HealthCheck");
             let mut req = request.into_request();
-            req.extensions_mut().insert(GrpcMethod::new("vector.Vector", "HealthCheck"));
+            req.extensions_mut()
+                .insert(GrpcMethod::new("vector.Vector", "HealthCheck"));
             self.inner.unary(req, path, codec).await
         }
     }
@@ -638,17 +618,11 @@ pub mod vector_server {
         async fn push_events(
             &self,
             request: tonic::Request<super::PushEventsRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::PushEventsResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::PushEventsResponse>, tonic::Status>;
         async fn health_check(
             &self,
             request: tonic::Request<super::HealthCheckRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::HealthCheckResponse>,
-            tonic::Status,
-        >;
+        ) -> std::result::Result<tonic::Response<super::HealthCheckResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct VectorServer<T: Vector> {
@@ -673,10 +647,7 @@ pub mod vector_server {
                 max_encoding_message_size: None,
             }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> InterceptedService<Self, F>
+        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
         {
@@ -732,13 +703,9 @@ pub mod vector_server {
                 "/vector.Vector/PushEvents" => {
                     #[allow(non_camel_case_types)]
                     struct PushEventsSvc<T: Vector>(pub Arc<T>);
-                    impl<T: Vector> tonic::server::UnaryService<super::PushEventsRequest>
-                    for PushEventsSvc<T> {
+                    impl<T: Vector> tonic::server::UnaryService<super::PushEventsRequest> for PushEventsSvc<T> {
                         type Response = super::PushEventsResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::PushEventsRequest>,
@@ -774,23 +741,15 @@ pub mod vector_server {
                 "/vector.Vector/HealthCheck" => {
                     #[allow(non_camel_case_types)]
                     struct HealthCheckSvc<T: Vector>(pub Arc<T>);
-                    impl<
-                        T: Vector,
-                    > tonic::server::UnaryService<super::HealthCheckRequest>
-                    for HealthCheckSvc<T> {
+                    impl<T: Vector> tonic::server::UnaryService<super::HealthCheckRequest> for HealthCheckSvc<T> {
                         type Response = super::HealthCheckResponse;
-                        type Future = BoxFuture<
-                            tonic::Response<Self::Response>,
-                            tonic::Status,
-                        >;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
                             &mut self,
                             request: tonic::Request<super::HealthCheckRequest>,
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
-                            let fut = async move {
-                                (*inner).health_check(request).await
-                            };
+                            let fut = async move { (*inner).health_check(request).await };
                             Box::pin(fut)
                         }
                     }
@@ -817,18 +776,14 @@ pub mod vector_server {
                     };
                     Box::pin(fut)
                 }
-                _ => {
-                    Box::pin(async move {
-                        Ok(
-                            http::Response::builder()
-                                .status(200)
-                                .header("grpc-status", "12")
-                                .header("content-type", "application/grpc")
-                                .body(empty_body())
-                                .unwrap(),
-                        )
-                    })
-                }
+                _ => Box::pin(async move {
+                    Ok(http::Response::builder()
+                        .status(200)
+                        .header("grpc-status", "12")
+                        .header("content-type", "application/grpc")
+                        .body(empty_body())
+                        .unwrap())
+                }),
             }
         }
     }

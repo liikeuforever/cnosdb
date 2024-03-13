@@ -14,17 +14,7 @@ pub struct MetricMetadata {
 }
 /// Nested message and enum types in `MetricMetadata`.
 pub mod metric_metadata {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum MetricType {
         Unknown = 0,
@@ -157,17 +147,7 @@ pub struct Histogram {
 }
 /// Nested message and enum types in `Histogram`.
 pub mod histogram {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum ResetHint {
         /// Need to test for a counter reset explicitly.
@@ -279,17 +259,7 @@ pub struct LabelMatcher {
 }
 /// Nested message and enum types in `LabelMatcher`.
 pub mod label_matcher {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Type {
         Eq = 0,
@@ -364,17 +334,7 @@ pub struct Chunk {
 /// Nested message and enum types in `Chunk`.
 pub mod chunk {
     /// We require this to match chunkenc.Encoding.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum Encoding {
         Unknown = 0,
@@ -442,17 +402,7 @@ pub struct ReadRequest {
 }
 /// Nested message and enum types in `ReadRequest`.
 pub mod read_request {
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
     #[repr(i32)]
     pub enum ResponseType {
         /// Server will return a single ReadResponse message with matched series that includes list of raw samples.
