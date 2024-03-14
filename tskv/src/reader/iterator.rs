@@ -21,8 +21,8 @@ use models::field_value::DataType;
 use models::meta_data::VnodeId;
 use models::predicate::domain::{self, QueryArgs, QueryExpr, TimeRanges};
 use models::predicate::PlacedSplit;
-use models::schema::{PhysicalCType as ColumnType, TableColumn, TskvTableSchemaRef};
-use models::{ColumnId, PhysicalDType as ValueType, SeriesId, SeriesKey, Timestamp};
+use models::schema::{PhysicalCType, TableColumn, TskvTableSchemaRef};
+use models::{ColumnId, PhysicalDType, SeriesId, SeriesKey, Timestamp};
 use protos::kv_service::QueryRecordBatchRequest;
 use tokio::runtime::Runtime;
 use tokio::sync::mpsc::Receiver;
@@ -56,11 +56,11 @@ pub type CursorPtr = Box<dyn Cursor>;
 
 pub struct ArrayBuilderPtr {
     pub ptr: Box<dyn ArrayBuilder>,
-    pub column_type: ColumnType,
+    pub column_type: PhysicalCType,
 }
 
 impl ArrayBuilderPtr {
-    pub fn new(ptr: Box<dyn ArrayBuilder>, column_type: ColumnType) -> Self {
+    pub fn new(ptr: Box<dyn ArrayBuilder>, column_type: PhysicalCType) -> Self {
         Self { ptr, column_type }
     }
 
@@ -91,17 +91,17 @@ impl ArrayBuilderPtr {
 
     pub fn append_value(
         &mut self,
-        value_type: ValueType,
+        value_type: PhysicalDType,
         value: Option<DataType>,
         column_name: &str,
     ) -> Result<()> {
         match value_type {
-            ValueType::Unknown => {
+            PhysicalDType::Unknown => {
                 return Err(Error::CommonError {
                     reason: format!("unknown type of column '{}'", column_name),
                 });
             }
-            ValueType::String => match value {
+            PhysicalDType::String => match value {
                 Some(DataType::Str(_, val)) => {
                     // Safety
                     // All val is valid UTF-8 String
@@ -110,28 +110,28 @@ impl ArrayBuilderPtr {
                 }
                 _ => self.append_null_string(),
             },
-            ValueType::Boolean => {
+            PhysicalDType::Boolean => {
                 if let Some(DataType::Bool(_, val)) = value {
                     self.append_bool(val);
                 } else {
                     self.append_null_bool();
                 }
             }
-            ValueType::Float => {
+            PhysicalDType::Float => {
                 if let Some(DataType::F64(_, val)) = value {
                     self.append_primitive::<Float64Type>(val);
                 } else {
                     self.append_primitive_null::<Float64Type>();
                 }
             }
-            ValueType::Integer => {
+            PhysicalDType::Integer => {
                 if let Some(DataType::I64(_, val)) = value {
                     self.append_primitive::<Int64Type>(val);
                 } else {
                     self.append_primitive_null::<Int64Type>();
                 }
             }
-            ValueType::Unsigned => {
+            PhysicalDType::Unsigned => {
                 if let Some(DataType::U64(_, val)) = value {
                     self.append_primitive::<UInt64Type>(val);
                 } else {
@@ -238,10 +238,10 @@ impl ArrayBuilderPtr {
 
     pub fn append_column_data(&mut self, column: ArrayRef) {
         match self.column_type {
-            ColumnType::Tag | ColumnType::Field(ValueType::String) => {
+            PhysicalCType::Tag | PhysicalCType::Field(PhysicalDType::String) => {
                 self.extend_string_array(column);
             }
-            ColumnType::Time(ref unit) => match unit {
+            PhysicalCType::Time(ref unit) => match unit {
                 TimeUnit::Second => self.extend_primitive_array::<TimestampSecondType>(column),
                 TimeUnit::Millisecond => {
                     self.extend_primitive_array::<TimestampMillisecondType>(column)
@@ -253,16 +253,16 @@ impl ArrayBuilderPtr {
                     self.extend_primitive_array::<TimestampNanosecondType>(column)
                 }
             },
-            ColumnType::Field(ValueType::Float) => {
+            PhysicalCType::Field(PhysicalDType::Float) => {
                 self.extend_primitive_array::<Float64Type>(column);
             }
-            ColumnType::Field(ValueType::Integer) => {
+            PhysicalCType::Field(PhysicalDType::Integer) => {
                 self.extend_primitive_array::<Int64Type>(column);
             }
-            ColumnType::Field(ValueType::Unsigned) => {
+            PhysicalCType::Field(PhysicalDType::Unsigned) => {
                 self.extend_primitive_array::<UInt64Type>(column);
             }
-            ColumnType::Field(ValueType::Boolean) => {
+            PhysicalCType::Field(PhysicalDType::Boolean) => {
                 self.extend_bool_array(column);
             }
             _ => {
@@ -975,7 +975,7 @@ impl RowIterator {
             for _ in 0..aggregates.len() {
                 builders.push(ArrayBuilderPtr::new(
                     Box::new(Int64Builder::with_capacity(query_option.batch_size)),
-                    ColumnType::Field(ValueType::Integer),
+                    PhysicalCType::Field(PhysicalDType::Integer),
                 ));
             }
             return Ok(builders);
@@ -997,12 +997,14 @@ impl RowIterator {
     }
 
     pub fn new_column_builder(
-        column_type: &ColumnType,
+        column_type: &PhysicalCType,
         batch_size: usize,
     ) -> Result<Box<dyn ArrayBuilder>> {
         Ok(match column_type {
-            ColumnType::Tag => Box::new(StringBuilder::with_capacity(batch_size, batch_size * 32)),
-            ColumnType::Time(unit) => match unit {
+            PhysicalCType::Tag => {
+                Box::new(StringBuilder::with_capacity(batch_size, batch_size * 32))
+            }
+            PhysicalCType::Time(unit) => match unit {
                 TimeUnit::Second => Box::new(TimestampSecondBuilder::with_capacity(batch_size)),
                 TimeUnit::Millisecond => {
                     Box::new(TimestampMillisecondBuilder::with_capacity(batch_size))
@@ -1014,15 +1016,15 @@ impl RowIterator {
                     Box::new(TimestampNanosecondBuilder::with_capacity(batch_size))
                 }
             },
-            ColumnType::Field(t) => match t {
-                ValueType::Float => Box::new(Float64Builder::with_capacity(batch_size)),
-                ValueType::Integer => Box::new(Int64Builder::with_capacity(batch_size)),
-                ValueType::Unsigned => Box::new(UInt64Builder::with_capacity(batch_size)),
-                ValueType::Boolean => Box::new(BooleanBuilder::with_capacity(batch_size)),
-                ValueType::String => {
+            PhysicalCType::Field(t) => match t {
+                PhysicalDType::Float => Box::new(Float64Builder::with_capacity(batch_size)),
+                PhysicalDType::Integer => Box::new(Int64Builder::with_capacity(batch_size)),
+                PhysicalDType::Unsigned => Box::new(UInt64Builder::with_capacity(batch_size)),
+                PhysicalDType::Boolean => Box::new(BooleanBuilder::with_capacity(batch_size)),
+                PhysicalDType::String => {
                     Box::new(StringBuilder::with_capacity(batch_size, batch_size * 32))
                 }
-                ValueType::Unknown => {
+                PhysicalDType::Unknown => {
                     return Err(Error::CommonError {
                         reason: "failed to create column builder: unkown column type".to_string(),
                     })

@@ -941,8 +941,8 @@ pub mod test {
     use models::codec::Encoding;
     use models::field_value::FieldVal;
     use models::predicate::domain::TimeRange;
-    use models::schema::{ColumnType, TableColumn, TskvTableSchema};
-    use models::{SeriesId, SeriesKey, ValueType};
+    use models::schema::{ColumnType, PhysicalCType, TableColumn, TskvTableSchema};
+    use models::{PhysicalDType, SeriesId, SeriesKey, ValueType};
 
     use crate::compaction::{run_compaction_job, CompactReq};
     use crate::context::GlobalContext;
@@ -1009,7 +1009,8 @@ pub mod test {
 
     fn i64_column(data: Vec<i64>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Field(ValueType::Integer), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Integer), data.len())
+                .unwrap();
         for datum in data {
             col.push(Some(FieldVal::Integer(datum)))
         }
@@ -1018,7 +1019,7 @@ pub mod test {
 
     fn ts_column(data: Vec<i64>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Time(TimeUnit::Nanosecond), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Time(TimeUnit::Nanosecond), data.len()).unwrap();
         for datum in data {
             col.push(Some(FieldVal::Integer(datum)))
         }
@@ -1027,7 +1028,8 @@ pub mod test {
 
     fn i64_some_column(data: Vec<Option<i64>>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Field(ValueType::Integer), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Integer), data.len())
+                .unwrap();
         for datum in data {
             col.push(datum.map(FieldVal::Integer))
         }
@@ -1036,7 +1038,8 @@ pub mod test {
 
     fn u64_some_column(data: Vec<Option<u64>>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Field(ValueType::Unsigned), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Unsigned), data.len())
+                .unwrap();
         for datum in data {
             col.push(datum.map(FieldVal::Unsigned))
         }
@@ -1045,7 +1048,7 @@ pub mod test {
 
     fn f64_some_column(data: Vec<Option<f64>>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Field(ValueType::Float), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Float), data.len()).unwrap();
         for datum in data {
             col.push(datum.map(FieldVal::Float))
         }
@@ -1054,7 +1057,8 @@ pub mod test {
 
     fn bool_some_column(data: Vec<Option<bool>>) -> Column {
         let mut col =
-            Column::empty_with_cap(ColumnType::Field(ValueType::Boolean), data.len()).unwrap();
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Boolean), data.len())
+                .unwrap();
         for datum in data {
             col.push(datum.map(FieldVal::Boolean))
         }
@@ -1529,7 +1533,7 @@ pub mod test {
 
     fn generate_column_ts(min_ts: i64, max_ts: i64) -> Column {
         let mut col = Column::empty_with_cap(
-            ColumnType::Time(TimeUnit::Nanosecond),
+            PhysicalCType::Time(TimeUnit::Nanosecond),
             (max_ts - min_ts + 1) as usize,
         )
         .unwrap();
@@ -1540,7 +1544,8 @@ pub mod test {
     }
 
     fn generate_column_i64(len: usize, none_range: Vec<(usize, usize)>) -> Column {
-        let mut col = Column::empty_with_cap(ColumnType::Field(ValueType::Integer), len).unwrap();
+        let mut col =
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Integer), len).unwrap();
         for i in 0..len {
             if none_range.iter().any(|(min, max)| i >= *min && i <= *max) {
                 col.push(None);
@@ -1552,7 +1557,8 @@ pub mod test {
     }
 
     fn generate_column_u64(len: usize, none_range: Vec<(usize, usize)>) -> Column {
-        let mut col = Column::empty_with_cap(ColumnType::Field(ValueType::Unsigned), len).unwrap();
+        let mut col =
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Unsigned), len).unwrap();
         for i in 0..len {
             if none_range.iter().any(|(min, max)| i >= *min && i <= *max) {
                 col.push(None);
@@ -1564,7 +1570,8 @@ pub mod test {
     }
 
     fn generate_column_f64(len: usize, none_range: Vec<(usize, usize)>) -> Column {
-        let mut col = Column::empty_with_cap(ColumnType::Field(ValueType::Float), len).unwrap();
+        let mut col =
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Float), len).unwrap();
         for i in 0..len {
             if none_range.iter().any(|(min, max)| i >= *min && i <= *max) {
                 col.push(None);
@@ -1576,7 +1583,8 @@ pub mod test {
     }
 
     fn generate_column_bool(len: usize, none_range: Vec<(usize, usize)>) -> Column {
-        let mut col = Column::empty_with_cap(ColumnType::Field(ValueType::Boolean), len).unwrap();
+        let mut col =
+            Column::empty_with_cap(PhysicalCType::Field(PhysicalDType::Boolean), len).unwrap();
         for i in 0..len {
             if none_range.iter().any(|(min, max)| i >= *min && i <= *max) {
                 col.push(None);

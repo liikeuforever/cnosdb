@@ -12,7 +12,7 @@ use minivec::MiniVec;
 use models::field_value::FieldVal;
 use models::predicate::domain::{TimeRange, TimeRanges};
 use models::schema::{
-    timestamp_convert, ColumnType, Precision, TableColumn, TskvTableSchema, TskvTableSchemaRef,
+    timestamp_convert, PhysicalCType, Precision, TableColumn, TskvTableSchema, TskvTableSchemaRef,
 };
 use models::{ColumnId, RwLockRef, SeriesId, SeriesKey, Timestamp};
 use parking_lot::RwLock;
@@ -520,10 +520,10 @@ impl SeriesData {
             let mut cols = schema
                 .fields()
                 .iter()
-                .map(|col| ColumnData::empty(col.column_type.clone()))
+                .map(|col| ColumnData::empty(col.column_type.clone().to_physical_type()))
                 .collect::<Result<Vec<_>>>()?;
             let mut delta_cols = cols.clone();
-            let mut time_array = ColumnData::empty(ColumnType::Time(TimeUnit::from(
+            let mut time_array = ColumnData::empty(PhysicalCType::Time(TimeUnit::from(
                 schema.time_column_precision(),
             )))?;
 

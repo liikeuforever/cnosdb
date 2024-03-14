@@ -8,8 +8,8 @@ use minivec::MiniVec;
 use models::codec::Encoding;
 use models::field_value::FieldVal;
 use models::predicate::domain::TimeRange;
-use models::schema::{ColumnType, TableColumn, TskvTableSchemaRef};
-use models::{SeriesId, SeriesKey, ValueType};
+use models::schema::{PhysicalCType, TableColumn, TskvTableSchemaRef};
+use models::{PhysicalDType, SeriesId, SeriesKey};
 use snafu::ResultExt;
 use utils::bitset::BitSet;
 use utils::BloomFilter;
@@ -96,13 +96,13 @@ use crate::{Error, Result};
 /// max size 1024
 #[derive(Debug, Clone, PartialEq)]
 pub struct Column {
-    column_type: ColumnType,
+    column_type: PhysicalCType,
     valid: BitSet,
     data: ColumnData,
 }
 
 impl Column {
-    pub fn new(column_type: ColumnType, valid: BitSet, data: ColumnData) -> Column {
+    pub fn new(column_type: PhysicalCType, valid: BitSet, data: ColumnData) -> Column {
         Column {
             column_type,
             valid,
@@ -110,23 +110,23 @@ impl Column {
         }
     }
 
-    pub fn empty(column_type: ColumnType) -> Result<Column> {
+    pub fn empty(column_type: PhysicalCType) -> Result<Column> {
         let valid = BitSet::new();
         let column = Self {
             column_type: column_type.clone(),
             valid,
-            data: match column_type {
-                ColumnType::Tag => ColumnData::String(vec![], String::new(), String::new()),
-                ColumnType::Time(_) => ColumnData::I64(vec![], i64::MAX, i64::MIN),
-                ColumnType::Field(ref field_type) => match field_type {
-                    ValueType::Float => ColumnData::F64(vec![], f64::MAX, f64::MIN),
-                    ValueType::Integer => ColumnData::I64(vec![], i64::MAX, i64::MIN),
-                    ValueType::Unsigned => ColumnData::U64(vec![], u64::MAX, u64::MIN),
-                    ValueType::Boolean => ColumnData::Bool(vec![], false, true),
-                    ValueType::Geometry(_) | ValueType::String => {
+            data: match column_type.clone() {
+                PhysicalCType::Tag => ColumnData::String(vec![], String::new(), String::new()),
+                PhysicalCType::Time(_) => ColumnData::I64(vec![], i64::MAX, i64::MIN),
+                PhysicalCType::Field(ref field_type) => match field_type {
+                    PhysicalDType::Float => ColumnData::F64(vec![], f64::MAX, f64::MIN),
+                    PhysicalDType::Integer => ColumnData::I64(vec![], i64::MAX, i64::MIN),
+                    PhysicalDType::Unsigned => ColumnData::U64(vec![], u64::MAX, u64::MIN),
+                    PhysicalDType::Boolean => ColumnData::Bool(vec![], false, true),
+                    PhysicalDType::String => {
                         ColumnData::String(vec![], String::new(), String::new())
                     }
-                    ValueType::Unknown => {
+                    PhysicalDType::Unknown => {
                         return Err(Error::UnsupportedDataType {
                             dt: "unknown".to_string(),
                         })
@@ -137,31 +137,35 @@ impl Column {
         Ok(column)
     }
 
-    pub fn empty_with_cap(column_type: ColumnType, cap: usize) -> Result<Column> {
+    pub fn empty_with_cap(column_type: PhysicalCType, cap: usize) -> Result<Column> {
         let valid = BitSet::with_size(cap);
         let column = Self {
             column_type: column_type.clone(),
             valid,
             data: match column_type {
-                ColumnType::Tag => {
+                PhysicalCType::Tag => {
                     ColumnData::String(Vec::with_capacity(cap), String::new(), String::new())
                 }
-                ColumnType::Time(_) => ColumnData::I64(Vec::with_capacity(cap), i64::MAX, i64::MIN),
-                ColumnType::Field(ref field_type) => match field_type {
-                    ValueType::Float => {
+                PhysicalCType::Time(_) => {
+                    ColumnData::I64(Vec::with_capacity(cap), i64::MAX, i64::MIN)
+                }
+                PhysicalCType::Field(ref field_type) => match field_type {
+                    PhysicalDType::Float => {
                         ColumnData::F64(Vec::with_capacity(cap), f64::MAX, f64::MIN)
                     }
-                    ValueType::Integer => {
+                    PhysicalDType::Integer => {
                         ColumnData::I64(Vec::with_capacity(cap), i64::MAX, i64::MIN)
                     }
-                    ValueType::Unsigned => {
+                    PhysicalDType::Unsigned => {
                         ColumnData::U64(Vec::with_capacity(cap), u64::MAX, u64::MIN)
                     }
-                    ValueType::Boolean => ColumnData::Bool(Vec::with_capacity(cap), false, true),
-                    ValueType::Geometry(_) | ValueType::String => {
+                    PhysicalDType::Boolean => {
+                        ColumnData::Bool(Vec::with_capacity(cap), false, true)
+                    }
+                    PhysicalDType::String => {
                         ColumnData::String(Vec::with_capacity(cap), String::new(), String::new())
                     }
-                    ValueType::Unknown => {
+                    PhysicalDType::Unknown => {
                         return Err(Error::UnsupportedDataType {
                             dt: "unknown".to_string(),
                         })
@@ -502,8 +506,10 @@ impl DataBlock {
         let mut columns = Vec::new();
         let mut columns_des = Vec::new();
         for field in schema.fields() {
-            let mut merge_column =
-                Column::empty_with_cap(field.column_type.clone(), time_array.len())?;
+            let mut merge_column = Column::empty_with_cap(
+                field.column_type.clone().to_physical_type(),
+                time_array.len(),
+            )?;
             let column_self = self.column(&field.name);
             let column_other = other.column(&field.name);
             for idx in sort_index.iter() {
@@ -545,8 +551,10 @@ impl DataBlock {
             columns_des.push(field.clone());
         }
 
-        let mut ts_col =
-            Column::empty_with_cap(self.ts_desc.column_type.clone(), time_array.len())?;
+        let mut ts_col = Column::empty_with_cap(
+            self.ts_desc.column_type.clone().to_physical_type(),
+            time_array.len(),
+        )?;
 
         time_array
             .iter()
@@ -1136,14 +1144,14 @@ mod test {
     use models::codec::Encoding;
     use models::field_value::FieldVal;
     use models::predicate::domain::TimeRange;
-    use models::schema::{ColumnType, TableColumn, TskvTableSchema};
-    use models::{SeriesKey, ValueType};
+    use models::schema::{ColumnType, PhysicalCType, TableColumn, TskvTableSchema};
+    use models::{PhysicalDType, SeriesKey, ValueType};
 
     use crate::tsm::reader::TSMReader;
     use crate::tsm::writer::{Column, DataBlock, TsmWriter};
 
     fn i64_column(data: Vec<i64>) -> Column {
-        let mut col = Column::empty(ColumnType::Field(ValueType::Integer)).unwrap();
+        let mut col = Column::empty(PhysicalCType::Field(PhysicalDType::Integer)).unwrap();
         for datum in data {
             col.push(Some(FieldVal::Integer(datum)))
         }
@@ -1151,7 +1159,7 @@ mod test {
     }
 
     fn ts_column(data: Vec<i64>) -> Column {
-        let mut col = Column::empty(ColumnType::Time(TimeUnit::Nanosecond)).unwrap();
+        let mut col = Column::empty(PhysicalCType::Time(TimeUnit::Nanosecond)).unwrap();
         for datum in data {
             col.push(Some(FieldVal::Integer(datum)))
         }
